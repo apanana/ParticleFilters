@@ -138,10 +138,10 @@ We resample to deal with the degeneracy problem. Modifying step 2 gives us:
 \item \textit{Importance Sampling and Resampling:}
 \item[] For $t=1,\dots,T$:
 \begin{itemize}
-\item[] Sample $x_t^{(i)} \sim f(x_t|x_{t-1}^{i})$
+\item[] Sample $x_t^{(i)} \sim f(x_t|\widetilde{x}_{t-1}^{i})$
 \item[] Assign weights $\widetilde{w}_t^{(i)} = g(y_t|x_t^{(i)})$
 \item[] Normalize weights $w_t^{(i)} = \frac{\widetilde{w}_t^{(i)}}{\sum_{i=1}^{n} \widetilde{w}_t^{(i)}}$
-\item[] Resample $x_t^{(i)}$ according to the weight distribution.
+\item[] Resample $\widetilde{x}_t^{(i)}$ from $x_t^{(i)}$ according to the weight distribution.
 \end{itemize}
 \end{enumerate}
 
