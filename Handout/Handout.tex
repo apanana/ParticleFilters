@@ -51,7 +51,7 @@ Basically, the big idea is to use our observations of the system to determine th
 p(x_{n}|y_{1:n}) = \int p(x_{1:n}|y_{1:n}) dx_{1:n-1}
 \end{equation}
 
-Setting this as a marginal of $p(x_{1:n}|y_{1:n})$ is helpful because we can refactor this conditional distribution to see how it comes from our prior distributions of the hidden state and observations. With some refactoring we can show:
+Setting this as a marginal of $p(x_{1:n}|y_{1:n})$ is helpful because we can refactor this conditional distribution to see how it comes from our prior distributions of the hidden state and observations. With some refactoring and using our initial HMM conditions we can show:
 
 \begin{equation}
 \begin{split}
@@ -97,11 +97,30 @@ So what if our distribution isn't nice? To find the our desired distribution we 
 
 \begin{equation}
 \textnormal{Update step:  }
-\pi_{x_{1:t}|y_{1:t}}(x_{1:n}|y_{1:t})\propto g(y_t|x_t)\pi_{x_{1:t}|y_{1:t-1}}(x_{1:n}|y_{1:t-1})
+\pi_{x_{1:t}|y_{1:t}}(x_{1:t}|y_{1:t})\propto g(y_t|x_t)\pi_{x_{1:t}|y_{1:t-1}}(x_{1:t}|y_{1:t-1})
 \end{equation}
 
 % --------------------- SIS ---------------------
 \section{SIS}
+\begin{enumerate}
+\item \textit{Initialization:}
+\item[] For $i=1,\dots N$:
+\begin{itemize}
+\item[] Sample $x_0^{(i)} \sim \mu(x_0)$ 
+\item[] Assign weights $\widetilde{w}_0^{(i)} = g(y_0|x_0^{(i)})$
+\item[] Normalize weights $w_0^{(i)} = \frac{\widetilde{w}_0^{(i)}}{\sum_{i=1}^{n} \widetilde{w}_0^{(i)}}$
+\end{itemize}
+\item \textit{Importance Sampling:}
+\item[] For $t=1,\dots,T$:
+\begin{itemize}
+\item[] Sample $x_t^{(i)} \sim f(x_t|x_{t-1}^{i})$
+% w_{t-1}^{(i)} 
+\item[] Assign weights $\widetilde{w}_t^{(i)} = g(y_t|x_t^{(i)})$
+\item[] Normalize weights $w_t^{(i)} = \frac{\widetilde{w}_t^{(i)}}{\sum_{i=1}^{n} \widetilde{w}_t^{(i)}}$
+\end{itemize}
+\item Return $\{x_T^{(i)},w_T^{(i)}\}_{i=1}^N$
+\end{enumerate}
+
 We never use this is real life beacuse of the degeneracy problem.
 
 % --------------------- Degeneracy Problem ---------------------
@@ -112,7 +131,20 @@ When we are sampling from our reweighted distribution, points with more mass ten
 % --------------------- Bootstrap/SIR ---------------------
 \section{Bootstrap (SIR)}
 
-We resample to deal with the degeneracy problem.
+We resample to deal with the degeneracy problem. Modifying step 2 gives us:
+
+\begin{enumerate}
+\setcounter{enumi}{1}
+\item \textit{Importance Sampling and Resampling:}
+\item[] For $t=1,\dots,T$:
+\begin{itemize}
+\item[] Sample $x_t^{(i)} \sim f(x_t|x_{t-1}^{i})$
+\item[] Assign weights $\widetilde{w}_t^{(i)} = g(y_t|x_t^{(i)})$
+\item[] Normalize weights $w_t^{(i)} = \frac{\widetilde{w}_t^{(i)}}{\sum_{i=1}^{n} \widetilde{w}_t^{(i)}}$
+\item[] Resample $x_t^{(i)}$ according to the weight distribution.
+\end{itemize}
+\end{enumerate}
+
 
 Except that there's a whole new problem called the sampling impoverishment problem. There are methods that address both of these issues but they require fancy sounding things like the ``Epanechnikov Kernel''.
 
