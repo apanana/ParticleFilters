@@ -65,4 +65,46 @@ p(x_{1:n}|y_{1:n}) &= \frac{p(x_{1:n}, y_{1:n})}{p(y_{1:n})} \\
 \end{align*}
 \end{frame}
 
+\begin{frame}
+\frametitle{Sequential Importance Sampling (SIS)}
+\begin{enumerate}
+\item \textit{Initialization:}
+\item[] For $i=1,\dots N$:
+\begin{itemize}
+\item[] Sample $x_0^{(i)} \sim \mu(x_0)$ 
+\item[] Assign weights $\widetilde{w}_0^{(i)} = \alpha_n(x_1)$
+\end{itemize}
+\item \textit{Importance Sampling:}
+\item[] For $t=1,\dots,T$:
+\begin{itemize}
+\item[] Sample $x_t^{(i)} \sim f(x_t|x_{t-1}^{i})$
+\item[] Assign weights $\widetilde{w}_t^{(i)} = w_{t-1}(x_{1:n-1})\alpha(x_{1:n})=w_1(x_1)\prod_{k=2}^{n}\alpha_k(x_{1:k})$
+\end{itemize}
+\item Return $\{x_T^{(i)},w_T^{(i)}\}_{i=1}^N$
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Sequential Importance Resampling (SIR)}
+\begin{enumerate}
+\item \textit{Initialization:}
+\item[] For $i=1,\dots N$:
+\begin{itemize}
+\item[] Sample $x_0^{(i)} \sim \mu(x_0)$ 
+\item[] Assign weights $\widetilde{w}_0^{(i)} = g(y_0|x_0^{(i)})$
+\item[] Normalize weights $w_0^{(i)} = \frac{\widetilde{w}_0^{(i)}}{\sum_{i=1}^{n} \widetilde{w}_0^{(i)}}$
+\end{itemize}
+\item \textit{Importance Sampling:}
+\item[] For $t=1,\dots,T$:
+\begin{itemize}
+\item[] Sample $x_t^{(i)} \sim f(x_t|\widetilde{x}_{t-1}^{i})$
+\item[] Assign weights $\widetilde{w}_t^{(i)} = g(y_t|x_t^{(i)})$
+\item[] Normalize weights $w_t^{(i)} = \frac{\widetilde{w}_t^{(i)}}{\sum_{i=1}^{n} \widetilde{w}_t^{(i)}}$
+\item[] Resample $\widetilde{x}_t^{(i)}$ from $x_t^{(i)}$ according to the weight distribution.
+\end{itemize}
+\item Return $\{x_T^{(i)},w_T^{(i)}\}_{i=1}^N$
+\end{enumerate}
+\end{frame}
+
+
 \end{document}
