@@ -32,20 +32,18 @@
 \section{Hidden Markov Models}
 
 A \textbf{Hidden Markov Model} (HMM) is defined by an underlying system that is a Markov process with states that cannot be observed, but gives outputs that are dependent on the hidden state of the system. If we let random variable $X_i$ represent the $i$-th state of the system, and $Y_i$ represent the $i$-th output of the system, we have:
-
 \begin{equation}
 X_1 \sim \mu (x_1) \textnormal{ and } X_n|(X_{n-1}=x_{n-1}) \sim f(x_n|x_{n-1})
 \end{equation}
 \begin{equation}
 Y_n|(X_n = x_n) \sim g(y_n|x_n)
 \end{equation}
-
-where $X_1$ is defined by some initial conditions $\mu(x_1)$.
+where $X_1$ is defined by some initial conditions $\mu(x_1)$. Note how $f$ obeys the Markov property, so current state is dependent only on the previous state. Also note that $g$ shows that the current observation is only dependent on the current state.
 
 % --------------------- Setting up the problem ---------------------
 \section{Particle Filters}
 
-Basically, the big idea is to use our observations of the system to determine the hidden state of the system. That is to say, we want to figure out $p(x_{n}|y_{1:n})$. Recognizing that this is a marginal is useful because then we can just say:
+Basically, the main idea is to use our observations of the system to determine the hidden state of the system. That is to say, we want to figure out $p(x_{n}|y_{1:n})$. Recognizing that this is a marginal is useful because then we can just say:
 
 \begin{equation}
 p(x_{n}|y_{1:n}) = \int p(x_{1:n}|y_{1:n}) dx_{1:n-1}
