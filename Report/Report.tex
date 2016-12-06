@@ -1,12 +1,26 @@
 \documentclass{article}
 \usepackage{amsmath}
 
-\title{Particle Filters}
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+%Title Info
+\title{\vspace{-2cm}Particle Filters} %remove the extra spacing at the top
 \author{Alex Pan and Alec Kosik}
-\date{}
+\date{} %blank the date
 
 \begin{document}
 \maketitle
+
+% --------------------- Abstract ---------------------
+\begin{abstract}
+Particle Filters allow us to model non-linearity and non-Gaussian distributions through Monte Carlo methods. We first discuss HMM, and then discuss a recursive formulation of the distribution of $p(x_t|y_{1:n})$. We then discuss how this leads well to an algorithmic approach. Finally, we investigate Kalman Filters, Importance Sampling, and SIR. We discuss the motivations for and relevant problems with each approach.
+\end{abstract}
 
 % --------------------- Preliminaries ---------------------
 \section{Hidden Markov Models}
@@ -18,10 +32,31 @@ X_1 \sim \mu (x_1) \textnormal{ and } X_n|(X_{n-1}=x_{n-1}) \sim f(x_n|x_{n-1})
 \begin{equation}
 Y_n|(X_n = x_n) \sim g(y_n|x_n)
 \end{equation}
-where $X_1$ is defined by some initial conditions $\mu(x_1)$. Note how $f$ obeys the Markov property, so the current state is dependent only on the previous state. Also note that $g$ shows that the current observation is only dependent on the current state.
+where $X_1$ is defined by some initial conditions $\mu(x_1)$. Note how $f$ obeys the Markov property, so the current state $x_n$ is dependent only on the previous state $x_{n-1}$. Also note that $g$ shows that the current observation $y_n$ is only dependent on the current state $x_n$.
+
+Let $x_{1:n}$ represent set the hidden states of the system from the first state to the $n$-th state, and $y_{1:n}$ represent the observations from the first observation to the $n$-th observation. There are a few important distributions that follow directly from our HMM setting.
+\begin{equation}
+\begin{split}
+p(x_{1:n}) &= p(x_1,\dots,x_n)\\
+&= p(x_1)p(x_2|x_1)p(x_3|x_2,x_1)\dots p(x_n|x_{n-1},\dots,x_1)\\
+&= p(x_1)p(x_2|x_1)p(x_3|x_2)\dots p(x_n|x_{n-1})\\
+&=\mu(x_1)\prod_{i=2}^{n} f(x_1|x_{i-1})\\
+\end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+p(y_{1:n}|x_{1:n}) &= p(y_1,\dots,y_n|x_{1:n})\\
+&= p(y_1|x_{1:n})p(y_2|x_{1:n},y_1)(y_3|x_{1:n},y_2,y_1)\dots (y_n|x_{1:n},y_{n-1},\dots,y_1)\\
+&= p(y_1|x_1)p(y_2|x_2)\dots (y_n|x_n)\\
+&= \prod_{i=1}^{n} g(y_i|x_i)\\
+\end{split}
+\end{equation}
+
+
 
 % --------------------- Setting up the problem ---------------------
 \section{Particle Filters}
+\subsection{General Goals}
 
 The main goal is to use our observations to determine the hidden state of the system. That is to say, we want to figure out $p(x_{n}|y_{1:n})$. Recognizing that this is a marginal is useful because then we can just say:
 
@@ -29,39 +64,94 @@ The main goal is to use our observations to determine the hidden state of the sy
 p(x_{n}|y_{1:n}) = \int p(x_{1:n}|y_{1:n}) dx_{1:n-1}
 \end{equation}
 
-Setting this as a marginal of $p(x_{1:n}|y_{1:n})$ is helpful because we can refactor this conditional distribution to see how it comes from our prior distributions of the hidden state and observations. With some refactoring and using our initial HMM conditions we can show:
+Setting our goal as a marginal of $p(x_{1:n}|y_{1:n})$ is helpful because we can refactor the full conditional distribution to see how it comes from our prior distributions of the hidden state and observations. With some refactoring and using our initial HMM conditions we can show:
 
 \begin{equation}
 \begin{split}
-% p(x_{1:n}|y_{1:n}) &= \frac{p(x_{1:n},y_{1:n})}{p(y_{1:n})}\\
-% p(x_{1:n},y_{1:n}) &= p(x_{1:n}) p(y_{1:n}|x_{1:n})\\
-% p(x_{1:n}) &= \mu(x_1)\prod_{i=2}^{n} f(x_1|x_{i-1})\\
-% p(y_{1:n}|x_{1:n}) &= \prod_{i=1}^{n} g(y_i|x_i)\\
-% p(y_{1:n}) &= \int p(x_{1:n},y_{1:n}) dx_{1:n}\\
-p(x_{n}|y_{1:n}) &= \int \frac{\mu(x_1)\prod_{i=2}^{n} f(x_1|x_{i-1})\prod_{i=1}^{n} g(y_i|x_i)}{\int \mu(x_1)\prod_{i=2}^{n} f(x_1|x_{i-1})\prod_{i=1}^{n} g(y_i|x_i) dx_{1:n}} dx_{1:n-1}
+p(x_{1:n}|y_{1:n}) &= \frac{p(x_{1:n},y_{1:n})}{p(y_{1:n})}\\
+&= \frac{p(x_{1:n}) p(y_{1:n}|x_{1:n})}{p(y_{1:n})}\\
+&= \frac{p(x_{1:n}) p(y_{1:n}|x_{1:n})}{\int p(x_{1:n},y_{1:n}) dx_{1:n}}\\
+&= \int \frac{\mu(x_1)\prod_{i=2}^{n} f(x_1|x_{i-1})\prod_{i=1}^{n} g(y_i|x_i)}{\int \mu(x_1)\prod_{i=2}^{n} f(x_1|x_{i-1})\prod_{i=1}^{n} g(y_i|x_i) dx_{1:n}} dx_{1:n-1}
 \end{split}
 \end{equation}
 
 This looks really messy, but it's helpful to see that this is just integration of functions we already know: $f$ and $g$. In other words, we already have all the information we need to arrive at the answer. 
+
+\subsection{A Recursive Formulation}
+While we now have a nice closed-form solution, it would be really inefficient if we had to calculate this whole equation every single iteration of our system. Instead, we can formulate this recursively and see how some of the values carry through. We can show that:
+
+\begin{equation}
+p(x_t|y_{0:t}) = \frac{p(x_t|y_{0:t-1})p(y_t|x_t)}{p(y_t|y_{0:t-1})}
+\end{equation}
+
+To see how this comes about, we will approach this from another angle using Baye's Rule:
+\begin{equation}
+\begin{split}
+p(x_t|y_{0:t}) &= \frac{p(x_t,y_{0:t})}{p(y_{0:t})}\\
+&= \frac{p(x_t,y_{0:t})}{p(y_t|y_{0:t-1})p(y_{0:t-1})}
+\end{split}
+\end{equation}
+
+We can also use Baye's rule to get a better look at the recursive step:
+\begin{equation}
+p(x_t|y_{0:t-1}) = \frac{p(x_t,y_{0:t-1})}{p(y_{0:t-1})}
+\end{equation}
+
+Plugging both of these back into our initial equation for $p(x_t|y_{0:t})$ gives us:
+\begin{equation}
+\begin{split}
+\frac{p(x_t,y_{0:t})}{p(y_t|y_{0:t-1})p(y_{0:t-1})} 
+&= \frac{p(x_t,y_{0:t-1})}{p(y_{0:t-1})}\frac{p(y_t|x_t)}{p(y_t|y_{0:t-1})}\\
+\implies
+p(x_t,y_{0:t}) &= p(x_t,y_{0:t-1})p(y_t|x_t)
+\end{split}
+\end{equation}
+
+So now we want to show that this equation is true. Let's start by refactoring the right-side.
+\begin{equation}
+\begin{split}
+p(x_t,y_{0:t-1})p(y_t|x_t) 
+&=p(x_t|y_{0:t-1})p(y_{0:t-1})\frac{p(x_t,y_t)}{p(x_t)}\\
+&=p(x_t|y_{0:t-1})p(y_{0:t-1})\frac{p(x_t|y_t)p(y_t)}{p(x_t)}\\
+\text{Using the fact that: }
+p(x|yz) &= \frac{p(y)p(z)}{p(yz)}\frac{p(x|y)p(x|z)}{p(x)}\\
+\text{Let: }
+& x=x_t, y=y_{0:t-1}, z = y_t\\
+\text{We can see: }
+p(x_t|y_{0:t-1},y_t) &= \frac{p(y_{0:t-1})p(y_t)}{p(y_{0:t-1},y_t)}\frac{p(x_t|y_{0:t-1})p(x_t|y_t)}{p(x_t)}\\
+\implies
+p(x_t|y_{0:t-1})p(y_{0:t-1})\frac{p(x_t|y_t)p(y_t)}{p(x_t)} &= p(x_t|y_{0:t})p(y_0:t)\\
+&= p(x_t,y_{0:t})\\
+\end{split}
+\end{equation}
+
+
+...
+
+
+Some stuff with integrals :)
+
+...
 
 The issue now is that this is sometimes intractable. If functions are nice, like guassians or linear distributions, this is integrable and we can arrive at a solution analytically. However, this is not always the case, which is why we sometimes need to derive an answer from numeric approximations.
 
 % --------------------- Kalman Filter ---------------------
 \section{Kalman Filter}
 
-So let's say you're really lucky and your initial distribution is something nice. This allows us to get a solution analytically through a method called the Kalman Filter. The algorithm becomes a little more obvious if we recognize the recursive form of our goal:
+This needs to be re-done because I've moved the discussion of the recursive form to the earlier section. Former code has been commented out. 
+% So let's say you're really lucky and your initial distribution is something nice. This allows us to get a solution analytically through a method called the Kalman Filter. The algorithm becomes a little more obvious if we recognize the recursive form of our goal:
 
-\begin{equation}
-\textnormal{Prediction step:  }
-p(x_{n}|y_{1:n-1}) = \int f(x_n|x_{n-1})p(x_{n-1}|y_{1:n-1}) dx_{n-1}
-\end{equation}
+% \begin{equation}
+% \textnormal{Prediction step:  }
+% p(x_{n}|y_{1:n-1}) = \int f(x_n|x_{n-1})p(x_{n-1}|y_{1:n-1}) dx_{n-1}
+% \end{equation}
 
-\begin{equation}
-\textnormal{Update step:  }
-p(x_{n}|y_{1:n}) = \frac{g(y_n|x_n)p(x_{n}|y_{1:n-1})}{p(y_n|y_{1:n-1})}
-\end{equation}
+% \begin{equation}
+% \textnormal{Update step:  }
+% p(x_{n}|y_{1:n}) = \frac{g(y_n|x_n)p(x_{n}|y_{1:n-1})}{p(y_n|y_{1:n-1})}
+% \end{equation}
 
-Essentially, we are now assuming that $p(x_{n-1}|y_{1:n-1})$ is known due to recursion. To see how this relates to our earlier definition of $p(x_{n}|y_{1:n})$ in Eq. (4), note that the numerator of Eq. (4) is the product of all of $f$ and $g$ from Eq. (5) and (6) while the denominator is the product of conditionals from Eq. (6). The denominator simplifies to $p(y_{1:n})$ which is just the marginal distribution of observations on the joint, hence the second integral inside of the denominator of Eq. (4). 
+% Essentially, we are now assuming that $p(x_{n-1}|y_{1:n-1})$ is known due to recursion. To see how this relates to our earlier definition of $p(x_{n}|y_{1:n})$ in Eq. (4), note that the numerator of Eq. (4) is the product of all of $f$ and $g$ from Eq. (5) and (6) while the denominator is the product of conditionals from Eq. (6). The denominator simplifies to $p(y_{1:n})$ which is just the marginal distribution of observations on the joint, hence the second integral inside of the denominator of Eq. (4). 
 
 % --------------------- SMC Methods ---------------------
 \section{Sequential Monte Carlo Methods}
