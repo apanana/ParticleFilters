@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1480974868 "Handout.tex" "Handout.pdf" "Handout" 1480974868
+["pdflatex"] 1481007448 "Handout.tex" "Handout.pdf" "Handout" 1481007449
   "/usr/local/texlive/2016/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2016/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2016/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1136768653 1328 c834bbb027764024c09d3d2bf908b5f0 ""
@@ -33,10 +33,10 @@
   "/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1474230168 1888048 f2c5faed5981a516f406b2ccc20bff71 ""
   "/usr/local/texlive/2016/texmf-var/web2c/pdftex/pdflatex.fmt" 1463979169 3873397 413fbfbbedb8e719ddc392043a7add02 ""
   "/usr/local/texlive/2016/texmf.cnf" 1463979140 577 2938757e76f31531e65cc647e3507693 ""
-  "Handout.aux" 1480974868 639 c46930b228a91f8450f5cc85de37e288 ""
-  "Handout.tex" 1480974867 10625 e9e2e5bc789678223dff1081ef309e41 ""
+  "Handout.aux" 1481007449 639 c46930b228a91f8450f5cc85de37e288 ""
+  "Handout.tex" 1481007446 7811 0b0ddc4954e6b33c45a25e285c76de8b ""
   (generated)
   "Handout.toc"
+  "Handout.pdf"
   "Handout.aux"
   "Handout.log"
-  "Handout.pdf"

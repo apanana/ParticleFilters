@@ -6,26 +6,24 @@
 \date{}
 
 \begin{document}
-
 \maketitle
 
+% --------------------- Preliminaries ---------------------
 \section{Hidden Markov Models}
 
 A \textbf{Hidden Markov Model} (HMM) is defined by an underlying system that is a Markov process with states that cannot be observed, but gives outputs that are dependent on the hidden state of the system. If we let random variable $X_i$ represent the $i$-th state of the system, and $Y_i$ represent the $i$-th output of the system, we have:
-
 \begin{equation}
 X_1 \sim \mu (x_1) \textnormal{ and } X_n|(X_{n-1}=x_{n-1}) \sim f(x_n|x_{n-1})
 \end{equation}
 \begin{equation}
 Y_n|(X_n = x_n) \sim g(y_n|x_n)
 \end{equation}
-
-where $X_1$ is defined by some initial conditions $\mu(x_1)$.
+where $X_1$ is defined by some initial conditions $\mu(x_1)$. Note how $f$ obeys the Markov property, so the current state is dependent only on the previous state. Also note that $g$ shows that the current observation is only dependent on the current state.
 
 % --------------------- Setting up the problem ---------------------
 \section{Particle Filters}
 
-Basically, the big idea is to use our observations of the system to determine the hidden state of the system. That is to say, we want to figure out $p(x_{n}|y_{1:n})$. Recognizing that this is a marginal is useful because then we can just say:
+The main goal is to use our observations to determine the hidden state of the system. That is to say, we want to figure out $p(x_{n}|y_{1:n})$. Recognizing that this is a marginal is useful because then we can just say:
 
 \begin{equation}
 p(x_{n}|y_{1:n}) = \int p(x_{1:n}|y_{1:n}) dx_{1:n-1}
@@ -44,31 +42,31 @@ p(x_{n}|y_{1:n}) &= \int \frac{\mu(x_1)\prod_{i=2}^{n} f(x_1|x_{i-1})\prod_{i=1}
 \end{split}
 \end{equation}
 
-This looks really messy, but it's helpful to see that this is just integration of functions we already know $f$ and $g$. In other words, we already have all the information we need to arrive at the answer. 
+This looks really messy, but it's helpful to see that this is just integration of functions we already know: $f$ and $g$. In other words, we already have all the information we need to arrive at the answer. 
 
 The issue now is that this is sometimes intractable. If functions are nice, like guassians or linear distributions, this is integrable and we can arrive at a solution analytically. However, this is not always the case, which is why we sometimes need to derive an answer from numeric approximations.
 
 % --------------------- Kalman Filter ---------------------
 \section{Kalman Filter}
 
-So let's say you're really lucky and your initial distribution is something nice. This allows us to get a solution analytically through a method called the Kalman Filter. We can reformulate our goal as:
+So let's say you're really lucky and your initial distribution is something nice. This allows us to get a solution analytically through a method called the Kalman Filter. The algorithm becomes a little more obvious if we recognize the recursive form of our goal:
 
 \begin{equation}
 \textnormal{Prediction step:  }
-p(x_{n}|y_{1:n}) = \int f(x_n|x_{1:n-1})p(x_{n-1}|y_{1:n-1}) dx_{n-1}
+p(x_{n}|y_{1:n-1}) = \int f(x_n|x_{n-1})p(x_{n-1}|y_{1:n-1}) dx_{n-1}
 \end{equation}
 
 \begin{equation}
 \textnormal{Update step:  }
-p(x_{n}|y_{1:n}) \propto g(y_n|x_n)p(x_{n-1}|y_{1:n-1})
+p(x_{n}|y_{1:n}) = \frac{g(y_n|x_n)p(x_{n}|y_{1:n-1})}{p(y_n|y_{1:n-1})}
 \end{equation}
 
-Essentially, we are now assuming that $p(x_{n-1}|y_{1:n-1})$ is known due to recursion. To see how this relates to our earlier definition of $p(x_{n}|y_{1:n})$ in Eq. (4), note that this recursion is what gives us the numerator, while the normalization we do in the update step essentially gives us the denominator. 
+Essentially, we are now assuming that $p(x_{n-1}|y_{1:n-1})$ is known due to recursion. To see how this relates to our earlier definition of $p(x_{n}|y_{1:n})$ in Eq. (4), note that the numerator of Eq. (4) is the product of all of $f$ and $g$ from Eq. (5) and (6) while the denominator is the product of conditionals from Eq. (6). The denominator simplifies to $p(y_{1:n})$ which is just the marginal distribution of observations on the joint, hence the second integral inside of the denominator of Eq. (4). 
 
 % --------------------- SMC Methods ---------------------
 \section{Sequential Monte Carlo Methods}
 
-So what if our distribution isn't nice? To find the our desired distribution we will use an approximation:
+So what if our distribution isn't nice? We will use Monte Carlo Methods to approximate Eq. (5) and (6):
 
 \begin{equation}
 \textnormal{Prediction step:  }
@@ -82,6 +80,16 @@ So what if our distribution isn't nice? To find the our desired distribution we 
 
 % --------------------- SIS ---------------------
 \section{SIS}
+
+To algorithmically find our target distribution, we sample from something simple like the Uniform or Gaussian distribution. We then weight these samples using our observations and $g$. Essentially, we iterate between (7) and (8), sampling new points and updating our weights each time. While this sounds okay, it turns out that we never use SIS in real life because of something called the ``degeneracy problem''.
+
+% --------------------- Degeneracy Problem ---------------------
+\section{Degeneracy Problem}
+When we are sampling from our reweighted distribution, it is possible that certain points are assigned very low weight. In future iterations, this is likely to compound, making their weights essentially negligable. This manifests as a handful of points having nearly all the weight while the rest of our points have ``degenerated''. This is a problem because our distribution essentially is now defined by just a few of the original points we started with, which is not enough to get an accurate representation of our target distribution. 
+
+
+% --------------------- Bootstrap/SIR ---------------------
+\section{Bootstrap (SIR)}
 \begin{enumerate}
 \item \textit{Initialization:}
 \item[] For $i=1,\dots N$:
@@ -93,40 +101,15 @@ So what if our distribution isn't nice? To find the our desired distribution we 
 \item \textit{Importance Sampling:}
 \item[] For $t=1,\dots,T$:
 \begin{itemize}
-\item[] Sample $x_t^{(i)} \sim f(x_t|x_{t-1}^{i})$
-% w_{t-1}^{(i)} 
+\item[] Sample $x_t^{(i)} \sim f(x_t|\widetilde{x}_{t-1}^{i})$
 \item[] Assign weights $\widetilde{w}_t^{(i)} = g(y_t|x_t^{(i)})$
 \item[] Normalize weights $w_t^{(i)} = \frac{\widetilde{w}_t^{(i)}}{\sum_{i=1}^{n} \widetilde{w}_t^{(i)}}$
+\item[] Resample $\widetilde{x}_t^{(i)}$ from $x_t^{(i)}$ according to the weight distribution with replacement.
 \end{itemize}
 \item Return $\{x_T^{(i)},w_T^{(i)}\}_{i=1}^N$
 \end{enumerate}
 
-We never use this is real life beacuse of the degeneracy problem.
-
-% --------------------- Degeneracy Problem ---------------------
-\section{Degeneracy Problem}
-When we are sampling from our reweighted distribution, points with more mass tend to get more mass, while points with fewer mass tend to get less mass. Over a large number of iterations, this manifests as a handful of points having nearly all the weight while the rest of our points become negligable. 
-
-
-% --------------------- Bootstrap/SIR ---------------------
-\section{Bootstrap (SIR)}
-
-We resample to deal with the degeneracy problem. Modifying step 2 gives us:
-
-\begin{enumerate}
-\setcounter{enumi}{1}
-\item \textit{Importance Sampling and Resampling:}
-\item[] For $t=1,\dots,T$:
-\begin{itemize}
-\item[] Sample $x_t^{(i)} \sim f(x_t|\widetilde{x}_{t-1}^{i})$
-\item[] Assign weights $\widetilde{w}_t^{(i)} = g(y_t|x_t^{(i)})$
-\item[] Normalize weights $w_t^{(i)} = \frac{\widetilde{w}_t^{(i)}}{\sum_{i=1}^{n} \widetilde{w}_t^{(i)}}$
-\item[] Resample $\widetilde{x}_t^{(i)}$ from $x_t^{(i)}$ according to the weight distribution.
-\end{itemize}
-\end{enumerate}
-
-
-Except that there's a whole new problem called the sampling impoverishment problem. There are methods that address both of these issues but they require fancy sounding things like the ``Epanechnikov Kernel''.
+While this addresses the degeneracy problem, it turns out that resampling has it's own issue which we call the ``sampling impoverishment problem''. This comes about because our higher weighted points are more likely to be drawn multiple times, and it's possible that we might get a really bad resampling where all of the new points get drawn from a single point. There are methods that address both of these issues but they require fancy sounding things like the ``Epanechnikov Kernel'', which our outside the scope of our discussion. It turns out that SIR is generally good enough and is the algorithm that people generally use.
 
 
 
@@ -219,9 +202,3 @@ Except that there's a whole new problem called the sampling impoverishment probl
 % \end{equation}
 
 \end{document}
-
-
-
-
-\end{document}
-
