@@ -85,58 +85,41 @@ This looks really messy, but it's helpful to see that this is just integration o
 
 \subsection{A Recursive Formulation}
 % not integrable, we can't calculate this equation. also, i don't think it's closed-form or analytical since it contains an integral. there must be some word for it.
-While we now have a nice equation, it would be really inefficient if we had to calculate this whole equation every single iteration of our system. Instead, we can formulate this recursively and see how some of the values carry through. We can show that:
+While we now have a nice equation, it would be really inefficient if we had to calculate this whole equation every single iteration of our system. Instead, we can formulate this recursively and see how some of the values carry through. This recursiveness is described in two parts: the update equation and the prediction equation. We show the update equation first:
 
 \begin{equation} \label{want}
 p(x_t|y_{0:t}) = \frac{p(x_t|y_{0:t-1})p(y_t|x_t)}{p(y_t|y_{0:t-1})}
 \end{equation}
 
-To see how this comes about, we will approach this from another angle using Bayes' Rule:
-\begin{equation}
-\begin{split}
-p(x_t|y_{0:t}) &= \frac{p(x_t,y_{0:t})}{p(y_{0:t})}\\
-&= \frac{p(x_t,y_{0:t})}{p(y_t|y_{0:t-1})p(y_{0:t-1})}
-\end{split}
-\end{equation}
+The derivation will be broken into 2 parts. First, we will show that \eqref{want} holds iff $p(x_t,y_{0:t}) = p(x_t,y_{0:t-1})p(y_t|x_t)$ holds. Then we will show that $p(x_t,y_{0:t}) = p(x_t,y_{0:t-1})p(y_t|x_t)$. We start by applying Bayes' rule to the left side of \eqref{want} and then moving the denominator to the right side:
 
-We can then rewrite $p(x_t|y_{0:t-1})$ from the right side of \ref{want} using Bayes' rule:
-\begin{equation} \label{sub}
-p(x_t|y_{0:t-1}) = \frac{p(x_t,y_{0:t-1})}{p(y_{0:t-1})}
-\end{equation}
+\begin{align*}
+p(x_t,y_{0:t}) &= \frac{p(x_t|y_{0:t})p(y_t|x_t)}{p(y_t|y_{0:t-1})}p(y_{0:t}) \\
+\intertext{Applying Bayes' rule to $p(x_t|y_{0:t})$:}
+&= \frac{p(x_t,y_{0:t})p(y_t|x_t)}{p(y_t|y_{0:t-1})p(y_{0:t-1})}p(y_{0:t}) \\
+&= \frac{p(x_t,y_{0:t})p(y_t|x_t)}{p(y_{0:t})}p(y_{0:t}) \\
+&= p(x_t,y_{0:t})p(y_t|x_t)
+\end{align*}
 
-Setting the right side of \ref{lhs} equal to the right side of both of these back into our initial equation for $p(x_t|y_{0:t})$ gives us:
-\begin{equation}
-\begin{split}
-\frac{p(x_t,y_{0:t})}{p(y_t|y_{0:t-1})p(y_{0:t-1})} &= \frac{p(x_t,y_{0:t-1})}{p(y_{0:t-1})}\frac{p(y_t|x_t)}{p(y_t|y_{0:t-1})} \\
-&\iff \\
-p(x_t,y_{0:t}) &= p(x_t,y_{0:t-1})p(y_t|x_t)
-\end{split}
-\end{equation}
-
-So now we want to show that this equation is true. Let's start by refactoring the right-side.
-\begin{equation*}
-\begin{split}
-p(x_t,y_{0:t-1})p(y_t|x_t)
-&=p(x_t|y_{0:t-1})p(y_{0:t-1})\frac{p(x_t,y_t)}{p(x_t)}\\
-&=p(x_t|y_{0:t-1})p(y_{0:t-1})\frac{p(x_t|y_t)p(y_t)}{p(x_t)}\\
-\text{Using the fact that: }
-p(x|yz) &= \frac{p(y)p(z)}{p(yz)}\frac{p(x|y)p(x|z)}{p(x)}\\
-\text{Let: }
-& x=x_t, y=y_{0:t-1}, z = y_t\\
-\text{We can see: }
-p(x_t|y_{0:t-1},y_t) &= \frac{p(y_{0:t-1})p(y_t)}{p(y_{0:t-1},y_t)}\frac{p(x_t|y_{0:t-1})p(x_t|y_t)}{p(x_t)}\\
-\implies
+Second, we show $p(x_t,y_{0:t}) = p(x_t,y_{0:t-1})p(y_t|x_t)$. Let's start by refactoring the right-side.
+\begin{align*}
+p(x_t,y_{0:t-1})p(y_t|x_t) &= p(x_t|y_{0:t-1})p(y_{0:t-1})\frac{p(x_t,y_t)}{p(x_t)}\\
+&= p(x_t|y_{0:t-1})p(y_{0:t-1})\frac{p(x_t|y_t)p(y_t)}{p(x_t)}\\
+\intertext{Using the fact that: $p(x|yz) =$ {\Large $\frac{p(y)p(z)}{p(yz)}\frac{p(x|y)p(x|z)}{p(x)}$}}
+\intertext{Let: $x=x_t, y=y_{0:t-1}, z = y_t,$}
+\intertext{We can now see that:  $p(x_t|y_{0:t-1},y_t) =$ {\Large $\frac{p(y_{0:t-1})p(y_t)}{p(y_{0:t-1},y_t)}\frac{p(x_t|y_{0:t-1})p(x_t|y_t)}{p(x_t)}$}}
+\intertext{Thus,}
 p(x_t|y_{0:t-1})p(y_{0:t-1})\frac{p(x_t|y_t)p(y_t)}{p(x_t)} &= p(x_t|y_{0:t})p(y_0:t)\\
 &= p(x_t,y_{0:t})\\
-\end{split}
-\end{equation*}
+\end{align*}
 
-
-We can also show that:
+\noindent
+We now show how to derive the prediction equation:
 \begin{equation}
 p(x_t|y_{0:t-1}) = \int f(x_t|x_{t-1})p(x_{t-1}|y_{0:t-1}) dx_{t-1}
 \end{equation}
 
+\noindent
 If we approach this as a marginal by integrating out $x_{t-1}$ we normally would formulate this as:
 
 \begin{equation}
@@ -149,6 +132,8 @@ We can make use of the Markov property to see:
 \begin{equation}
 p(x_t|x_{t-1},y_{0:t-1}) = p(x_t|x_{t-1}) = f(x_t|x_{t-1})
 \end{equation}
+
+
 
 --------Some more words explaining what exactly just happened should go here.----------
 
