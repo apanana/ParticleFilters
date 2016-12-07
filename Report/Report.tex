@@ -132,12 +132,25 @@ p(x_t|y_{0:t-1})p(y_{0:t-1})\frac{p(x_t|y_t)p(y_t)}{p(x_t)} &= p(x_t|y_{0:t})p(y
 \end{equation*}
 
 
-...
+We can also show that:
+\begin{equation}
+p(x_t|y_{0:t-1}) = \int f(x_t|x_{t-1})p(x_{t-1}|y_{0:t-1}) dx_{t-1}
+\end{equation}
 
+If we approach this as a marginal by integrating out $x_{t-1}$ we normally would formulate this as:
 
-Some stuff with integrals :)
+\begin{equation}
+\begin{split}
+p(x_t|y_{0:t-1}) &= \int p(x_{t-1:t}|y_{0:t-1}) dx_{t-1}\\
+&= \int p(x_t|x_{t-1},y_{0:t-1})p(x_{t-1}|y_{0:t-1}) dx_{t-1}\\
+\end{split}
+\end{equation}
+We can make use of the Markov property to see:
+\begin{equation}
+p(x_t|x_{t-1},y_{0:t-1}) = p(x_t|x_{t-1}) = f(x_t|x_{t-1})
+\end{equation}
 
-...
+--------Some more words explaining what exactly just happened should go here.----------
 
 The issue now is that this is sometimes intractable. If functions are nice, like guassians or linear distributions, this is integrable and we can arrive at a solution analytically. However, this is not always the case, which is why we sometimes need to derive an answer from numeric approximations.
 
