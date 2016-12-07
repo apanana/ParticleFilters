@@ -87,7 +87,7 @@ This looks really messy, but it's helpful to see that this is just integration o
 % not integrable, we can't calculate this equation. also, i don't think it's closed-form or analytical since it contains an integral. there must be some word for it.
 While we now have a nice closed-form solution, it would be really inefficient if we had to calculate this whole equation every single iteration of our system. Instead, we can formulate this recursively and see how some of the values carry through. We can show that:
 
-\begin{equation}
+\begin{equation} \label{want}
 p(x_t|y_{0:t}) = \frac{p(x_t|y_{0:t-1})p(y_t|x_t)}{p(y_t|y_{0:t-1})}
 \end{equation}
 
@@ -99,23 +99,22 @@ p(x_t|y_{0:t}) &= \frac{p(x_t,y_{0:t})}{p(y_{0:t})}\\
 \end{split}
 \end{equation}
 
-We can also use Baye's rule to get a better look at the recursive step:
-\begin{equation}
+We can then rewrite $p(x_t|y_{0:t-1})$ from the right side of \ref{want} using Bayes' rule:
+\begin{equation} \label{sub}
 p(x_t|y_{0:t-1}) = \frac{p(x_t,y_{0:t-1})}{p(y_{0:t-1})}
 \end{equation}
 
-Plugging both of these back into our initial equation for $p(x_t|y_{0:t})$ gives us:
+Setting the right side of \ref{lhs} equal to the right side of both of these back into our initial equation for $p(x_t|y_{0:t})$ gives us:
 \begin{equation}
 \begin{split}
-\frac{p(x_t,y_{0:t})}{p(y_t|y_{0:t-1})p(y_{0:t-1})}
-&= \frac{p(x_t,y_{0:t-1})}{p(y_{0:t-1})}\frac{p(y_t|x_t)}{p(y_t|y_{0:t-1})}\\
-\implies
+\frac{p(x_t,y_{0:t})}{p(y_t|y_{0:t-1})p(y_{0:t-1})} &= \frac{p(x_t,y_{0:t-1})}{p(y_{0:t-1})}\frac{p(y_t|x_t)}{p(y_t|y_{0:t-1})} \\
+&\iff \\
 p(x_t,y_{0:t}) &= p(x_t,y_{0:t-1})p(y_t|x_t)
 \end{split}
 \end{equation}
 
 So now we want to show that this equation is true. Let's start by refactoring the right-side.
-\begin{equation}
+\begin{equation*}
 \begin{split}
 p(x_t,y_{0:t-1})p(y_t|x_t)
 &=p(x_t|y_{0:t-1})p(y_{0:t-1})\frac{p(x_t,y_t)}{p(x_t)}\\
@@ -130,7 +129,7 @@ p(x_t|y_{0:t-1},y_t) &= \frac{p(y_{0:t-1})p(y_t)}{p(y_{0:t-1},y_t)}\frac{p(x_t|y
 p(x_t|y_{0:t-1})p(y_{0:t-1})\frac{p(x_t|y_t)p(y_t)}{p(x_t)} &= p(x_t|y_{0:t})p(y_0:t)\\
 &= p(x_t,y_{0:t})\\
 \end{split}
-\end{equation}
+\end{equation*}
 
 
 ...
@@ -177,6 +176,24 @@ So what if our distribution isn't nice? We will use Monte Carlo Methods to appro
 
 % --------------------- SIS ---------------------
 \section{SIS}
+
+\begin{enumerate}
+\item \textit{Initialization:}
+\item[] For $i=1,\dots N$:
+\begin{itemize}
+\item[] Sample $x_0^{(i)} \sim \mu(x_0)$
+\item[] Assign weights $\widetilde{w}_0^{(i)} = g(y_0|x_0^{(i)})$
+\item[] Normalize weights $w_0^{(i)} = \frac{\widetilde{w}_0^{(i)}}{\sum_{i=1}^{n} \widetilde{w}_0^{(i)}}$
+\end{itemize}
+\item \textit{Importance Sampling:}
+\item[] For $t=1,\dots,T$:
+\begin{itemize}
+\item[] Sample $x_t^{(i)} \sim f(x_t|x_{t-1}^{i})$
+\item[] Assign weights $\widetilde{w}_t^{(i)} = g(y_t|x_t^{(i)})$
+\item[] Normalize weights $w_t^{(i)} = \frac{\widetilde{w}_t^{(i)}}{\sum_{i=1}^{n} \widetilde{w}_t^{(i)}}$
+\end{itemize}
+\item Return $\{x_T^{(i)},w_T^{(i)}\}_{i=1}^N$
+\end{enumerate}
 
 To algorithmically find our target distribution, we sample from something simple like the Uniform or Gaussian distribution. We then weight these samples using our observations and $g$. Essentially, we iterate between (7) and (8), sampling new points and updating our weights each time. While this sounds okay, it turns out that we never use SIS in real life because of something called the ``degeneracy problem''.
 
