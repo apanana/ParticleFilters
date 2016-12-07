@@ -38,21 +38,21 @@ Let $x_{1:n}$ represent the ordered n-tuple of hidden states $(x_1,\dots,x_n)$ w
 % this derivation is confusing (1) because of the switch from p to f and (2) because of the application of bayes rule to get derive line 2. i think it would be better to just give the equation in 1 line and explain where it comes from in prose.
 \begin{equation} \label{p(x_{1:n})}
 \begin{split}
-p(x_{1:n}) &= p(x_1,\dots,x_n)\\
+p(x_{1:n})
 &= p(x_1)p(x_2|x_1)p(x_3|x_2,x_1)\dots p(x_n|x_{n-1},\dots,x_1)\\
 &= p(x_1)p(x_2|x_1)p(x_3|x_2)\dots p(x_n|x_{n-1})\\
-&=\mu(x_1)\prod_{i=2}^{n} f(x_1|x_{i-1})\\
+&=\mu(x_1)\prod_{i=2}^{n} f(x_i|x_{i-1})\\
 \end{split}
 \end{equation}
+
 \begin{equation} \label{p(y_{1:n}|x_{1:n})}
 \begin{split}
-p(y_{1:n}|x_{1:n}) &= p(y_1,\dots,y_n|x_{1:n})\\
+p(y_{1:n}|x_{1:n})
 &= p(y_1|x_{1:n})p(y_2|x_{1:n},y_1)(y_3|x_{1:n},y_2,y_1)\dots (y_n|x_{1:n},y_{n-1},\dots,y_1)\\
 &= p(y_1|x_1)p(y_2|x_2)\dots (y_n|x_n)\\
 &= \prod_{i=1}^{n} g(y_i|x_i)\\
 \end{split}
 \end{equation}
-
 
 
 % --------------------- Setting up the problem ---------------------
@@ -85,7 +85,7 @@ This looks really messy, but it's helpful to see that this is just integration o
 
 \subsection{A Recursive Formulation}
 % not integrable, we can't calculate this equation. also, i don't think it's closed-form or analytical since it contains an integral. there must be some word for it.
-While we now have a nice closed-form solution, it would be really inefficient if we had to calculate this whole equation every single iteration of our system. Instead, we can formulate this recursively and see how some of the values carry through. We can show that:
+While we now have a nice equation, it would be really inefficient if we had to calculate this whole equation every single iteration of our system. Instead, we can formulate this recursively and see how some of the values carry through. We can show that:
 
 \begin{equation} \label{want}
 p(x_t|y_{0:t}) = \frac{p(x_t|y_{0:t-1})p(y_t|x_t)}{p(y_t|y_{0:t-1})}
