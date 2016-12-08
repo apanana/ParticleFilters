@@ -25,7 +25,14 @@
 Particle Filters allow us to model non-linear and non-Gaussian distributions through Monte Carlo methods. We first discuss HMM, and then discuss a recursive formulation of the distribution of $p(x_t|y_{1:n})$. We then discuss how this leads well to an algorithmic approach. Finally, we investigate Kalman Filters, Importance Sampling, and SIR. We discuss the motivations for and relevant problems with each approach.
 \end{abstract}
 
+% --------------------- Motivation ---------------------
 \section{Introduction}
+
+Imagine that we have some outside information about a system, and we can generate observations that are dependent on the state of the system. However, the actual state of the system is hidden from us. Then how can we go about finding out the hidden state of the system using our observations? It turns out we can through a process called \textbf{particle filtering}.
+
+To give a toy example of this, imagine that we have a robot in a room. We know the layout of the room, but we do not know the position of our robot. However, the robot is able to take some sort of measurements with a sensor, for example its distance to walls. Using the sensor data and our existing information about the layout of the room, we use particle filtering to make predictions about where we could be in the room.
+
+We will begin by formally defining the problem setting and then deriving the particle filter algorithms.
 
 % --------------------- Preliminaries ---------------------
 \section{Hidden Markov Models}
@@ -181,6 +188,7 @@ So what if our distribution isn't nice? We will use Monte Carlo Methods to appro
 % --------------------- SIS ---------------------
 \section{SIS}
 
+\subsection{SIS Algorithm}
 \begin{enumerate}
 \item \textit{Initialization:}
 \item[] For $i=1,\dots N$:
@@ -202,7 +210,7 @@ So what if our distribution isn't nice? We will use Monte Carlo Methods to appro
 To algorithmically find our target distribution, we sample from something simple like the Uniform or Gaussian distribution. We then weight these samples using our observations and $g$. Essentially, we iterate between (7) and (8), sampling new points and updating our weights each time. While this sounds okay, it turns out that we never use SIS in real life because of something called the ``degeneracy problem''.
 
 % --------------------- Degeneracy Problem ---------------------
-\section{Degeneracy Problem}
+\subsection{Degeneracy Problem}
 When we are sampling from our reweighted distribution, it is possible that certain points are assigned very low weight. In future iterations, this is likely to compound, making their weights essentially negligible. This manifests as a handful of points having nearly all the weight while the rest of our points have ``degenerated''. This is a problem because our distribution essentially is now defined by just a few of the original points we started with, which is not enough to get an accurate representation of our target distribution.
 
 
@@ -210,6 +218,7 @@ When we are sampling from our reweighted distribution, it is possible that certa
 \section{Bootstrap (SIR)}
 We can effectively solve the degeneracy problem by resampling. After each iteration $t>0$ we will resample all $N$ particles from the weighted distribution defined in the previous time step. Thus particles with low-to-negligible weights at $t$ will have a low probability of persisting to $t+1$. See Figure \ref{fig:sir} for a visualization of this process.
 
+\subsection{Bootstrap Algorithm}
 \begin{enumerate}
 \item \textit{Initialization:}
 \item[] For $i=1,\dots N$:
@@ -236,6 +245,7 @@ We can effectively solve the degeneracy problem by resampling. After each iterat
 \label{fig:sir}
 \end{figure}
 
+\subsection{Sampling Impoverishment Problem}
 While this addresses the degeneracy problem, it turns out that resampling has it's own issue which we call the ``sampling impoverishment problem''. This comes about because our higher weighted points are more likely to be drawn multiple times. Instead of having many low-weight points spread out across the state-space---in the case of SIS and the degeneracy problem---we will have lots of evenly-weighted points concentrated around areas where high-weight points originally occurred. Intuitively, the degeneracy problem leaves you with a diverse scattering of point masses with a few ill-defined peaks while the sampling impoverishment problem leaves you with \textit{only} well defined peaks. There are methods that address both of these issues but they require fancy sounding things like the ``Epanechnikov Kernel'', which our outside the scope of our discussion. It turns out that SIR is generally good enough and is the algorithm that people generally use.
 
 \section{Conclusion}
