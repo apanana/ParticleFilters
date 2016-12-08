@@ -1,5 +1,8 @@
 \documentclass{article}
 \usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{url}
+\graphicspath{{images/}}
 
 % Margins
 \topmargin=-0.45in
@@ -21,6 +24,8 @@
 \begin{abstract}
 Particle Filters allow us to model non-linear and non-Gaussian distributions through Monte Carlo methods. We first discuss HMM, and then discuss a recursive formulation of the distribution of $p(x_t|y_{1:n})$. We then discuss how this leads well to an algorithmic approach. Finally, we investigate Kalman Filters, Importance Sampling, and SIR. We discuss the motivations for and relevant problems with each approach.
 \end{abstract}
+
+\section{Introduction}
 
 % --------------------- Preliminaries ---------------------
 \section{Hidden Markov Models}
@@ -101,6 +106,7 @@ p(x_t,y_{0:t}) &= \frac{p(x_t|y_{0:t})p(y_t|x_t)}{p(y_t|y_{0:t-1})}p(y_{0:t}) \\
 &= p(x_t,y_{0:t})p(y_t|x_t)
 \end{align*}
 
+\noindent
 Second, we show $p(x_t,y_{0:t}) = p(x_t,y_{0:t-1})p(y_t|x_t)$. Let's start by refactoring the right-side.
 \begin{align*}
 p(x_t,y_{0:t-1})p(y_t|x_t) &= p(x_t|y_{0:t-1})p(y_{0:t-1})\frac{p(x_t,y_t)}{p(x_t)}\\
@@ -202,6 +208,8 @@ When we are sampling from our reweighted distribution, it is possible that certa
 
 % --------------------- Bootstrap/SIR ---------------------
 \section{Bootstrap (SIR)}
+We can effectively solve the degeneracy problem by resampling. After each iteration $t>0$ we will resample all $N$ particles from the weighted distribution defined in the previous time step. Thus particles with low-to-negligible weights at $t$ will have a low probability of persisting to $t+1$. See Figure \ref{fig:sir} for a visualization of this process.
+
 \begin{enumerate}
 \item \textit{Initialization:}
 \item[] For $i=1,\dots N$:
@@ -221,7 +229,16 @@ When we are sampling from our reweighted distribution, it is possible that certa
 \item Return $\{x_T^{(i)},w_T^{(i)}\}_{i=1}^N$
 \end{enumerate}
 
+\begin{figure}
+\centering
+\includegraphics[scale=.25]{sir}
+\caption{The SIR algorithm, adopted from \cite{sirfig}.}
+\label{fig:sir}
+\end{figure}
+
 While this addresses the degeneracy problem, it turns out that resampling has it's own issue which we call the ``sampling impoverishment problem''. This comes about because our higher weighted points are more likely to be drawn multiple times. Instead of having many low-weight points spread out across the state-space---in the case of SIS and the degeneracy problem---we will have lots of evenly-weighted points concentrated around areas where high-weight points originally occurred. Intuitively, the degeneracy problem leaves you with a diverse scattering of point masses with a few ill-defined peaks while the sampling impoverishment problem leaves you with \textit{only} well defined peaks. There are methods that address both of these issues but they require fancy sounding things like the ``Epanechnikov Kernel'', which our outside the scope of our discussion. It turns out that SIR is generally good enough and is the algorithm that people generally use.
+
+\section{Conclusion}
 
 
 
@@ -312,5 +329,9 @@ While this addresses the degeneracy problem, it turns out that resampling has it
 % \begin{equation}
 % \hat{\pi}_n(x_k)=\frac{1}{N}\sum_{i=1}^{N}\delta_{X_k^i}(x_k)
 % \end{equation}
+
+\newpage
+\bibliography{Reportbib}
+\bibliographystyle{ieeetr}
 
 \end{document}
