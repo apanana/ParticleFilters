@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  7 DEC 2016 21:03
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  7 DEC 2016 21:31
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -216,13 +216,13 @@ cmtt/m/n/10 http : / / www . inference . phy . cam . ac . uk / tcs27 /
 
 ) [6] (./Report.aux) ) 
 Here is how much of TeX's memory you used:
- 2192 strings out of 493089
- 29479 string characters out of 6134842
- 97665 words of memory out of 5000000
- 5653 multiletter control sequences out of 15000+600000
+ 2195 strings out of 493089
+ 29518 string characters out of 6134842
+ 97674 words of memory out of 5000000
+ 5656 multiletter control sequences out of 15000+600000
  11821 words of font info for 43 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 37i,16n,23p,997b,254s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,16n,23p,997b,264s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2015/texmf-dist/fonts/type1/public/am
 sfonts/cm/cmbx10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmbx12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsf
@@ -246,7 +246,7 @@ l/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/
 texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/te
 xlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/tex
 live/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on Report.pdf (6 pages, 434732 bytes).
+Output written on Report.pdf (6 pages, 439395 bytes).
 PDF statistics:
  116 PDF objects out of 1000 (max. 8388607)
  83 compressed objects within 1 object stream

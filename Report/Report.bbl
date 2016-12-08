@@ -4,4 +4,19 @@
 I.~{Steinruecken, Christian}, ``Advanced sampling.''
   \url{http://www.inference.phy.cam.ac.uk/tcs27/talks/sampling.html}.
 
+\bibitem{doucetsmc}
+G.~{Doucet, Arnaud}, {de Freitas, Nando}, {\em Sequential Monte Carlo Methods
+  in Practice}.
+\newblock Springer-Verlag New York, 2001.
+
+\bibitem{doucetfiltering}
+J.~{Doucet, Arnaud}, ``A tutorial on particle filtering and smoothing: Fifteen
+  years later.''
+  \url{http://www.stats.ox.ac.uk/~doucet/doucet_johansen_tutorialPF2011.pdf},
+  2008.
+
+\bibitem{rochester}
+E.~Orhan, ``Particle filtering.''
+  \url{http://www.cns.nyu.edu/~eorhan/notes/particle-filtering.pdf}, 2012.
+
 \end{thebibliography}
