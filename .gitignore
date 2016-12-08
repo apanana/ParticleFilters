@@ -1,0 +1,13 @@
+#Latex Auto-generated Files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.gz
+*.log
+*.nav
+*.out
+*.snm
+*.spl
+*.toc
