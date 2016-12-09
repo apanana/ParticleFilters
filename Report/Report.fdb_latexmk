@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex Report"] 1481179587 "Report.aux" "Report.bbl" "Report" 1481179613
+["bibtex Report"] 1481265737 "Report.aux" "Report.bbl" "Report" 1481270385
   "/usr/local/texlive/2016/texmf-dist/bibtex/bst/base/ieeetr.bst" 1292289607 18361 1a00e58565e7f19bf2b3e1bfb82254ae ""
-  "Report.aux" 1481179613 1584 e2e51f6afdc761e6816f5ff1b1512fdc ""
+  "Report.aux" 1481270163 2267 df167921b1efa647765b2664af522b64 ""
   "Report.bcf" 0 -1 0 ""
-  "Reportbib.bib" 1481176685 958 ee6d09e93e058885e8fa184c946e9ab1 ""
+  "Report.bib" 1481242626 958 ee6d09e93e058885e8fa184c946e9ab1 ""
   (generated)
-  "Report.blg"
   "Report.bbl"
-["pdflatex"] 1481179613 "Report.tex" "Report.pdf" "Report" 1481179613
+  "Report.blg"
+["pdflatex"] 1481270163 "Report.tex" "Report.pdf" "Report" 1481270385
   "/usr/local/texlive/2016/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2016/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2016/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -46,6 +46,7 @@
   "/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb" 1248133631 31809 8670ca339bf94e56da1fc21c80635e2a ""
   "/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb" 1248133631 32734 69e00a6b65cedb993666e42eedb3d48f ""
   "/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb" 1248133631 32762 224316ccc9ad3ca0423a14971cfa7fc1 ""
+  "/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb" 1248133631 32726 0a1aea6fcd6468ee2cf64d891f5c43c8 ""
   "/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb" 1248133631 33993 9b89b85fd2d9df0482bd47194d1d3bf3 ""
   "/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
   "/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb" 1248133631 32915 7bf7720c61a5b3a7ff25b0964421c9b6 ""
@@ -80,14 +81,15 @@
   "/usr/local/texlive/2016/texmf-dist/tex/latex/oberdiek/grfext.sty" 1463608860 7075 2fe3d848bba95f139de11ded085e74aa ""
   "/usr/local/texlive/2016/texmf-dist/tex/latex/oberdiek/kvoptions.sty" 1463608860 22417 1d9df1eb66848aa31b18a593099cf45c ""
   "/usr/local/texlive/2016/texmf-dist/tex/latex/pdftex-def/pdftex.def" 1306616590 55368 3c8a0d99822330f2dfabc0dfb09ce897 ""
+  "/usr/local/texlive/2016/texmf-dist/tex/latex/placeins/placeins.sty" 1137110565 4087 636308456f60d2b31cbf97867db5708d ""
   "/usr/local/texlive/2016/texmf-dist/tex/latex/url/url.sty" 1388531844 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "/usr/local/texlive/2016/texmf-dist/web2c/texmf.cnf" 1463093894 31953 b9489e6e586f798610c60aec1f5ec548 ""
   "/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1474230168 1888048 f2c5faed5981a516f406b2ccc20bff71 ""
   "/usr/local/texlive/2016/texmf-var/web2c/pdftex/pdflatex.fmt" 1463979169 3873397 413fbfbbedb8e719ddc392043a7add02 ""
   "/usr/local/texlive/2016/texmf.cnf" 1463979140 577 2938757e76f31531e65cc647e3507693 ""
-  "Report.aux" 1481179613 1584 e2e51f6afdc761e6816f5ff1b1512fdc ""
-  "Report.bbl" 1481179587 687 b27394eeaec70641a68becb49e6551c9 "bibtex Report"
-  "Report.tex" 1481179612 18170 4c856e226996a1be024c170991015243 ""
+  "Report.aux" 1481270163 2267 df167921b1efa647765b2664af522b64 ""
+  "Report.bbl" 1481265737 687 b27394eeaec70641a68becb49e6551c9 "bibtex Report"
+  "Report.tex" 1481270385 25020 be3dd373fe064479fc77794d3dc96949 ""
   "images/sir.png" 1481173591 195821 002da608dc27fe3a7ff3fd84650e67b6 ""
   (generated)
   "Report.log"
