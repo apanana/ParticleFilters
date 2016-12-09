@@ -207,18 +207,6 @@ We can then move towards an approximation of \eqref{predict} and \eqref{update} 
 
 As is, this method does not seem very helpful since we are modelling a distribution that we can sample from so, presumably, we already know the distribution analytically. In the next section we'll see why this simulation technique is important.
 
-% The prediction equation is just the update equation conditioned on $y_t$. To obtain an approximation of this equation we just need to reweight our update step by $g(y_t|x_t)$.
-
-% \begin{equation}
-% \widehat{p}(x_{1:t}|y_{1:t}) = \begin{cases}
-% g(y_t|x_{t}^{(1)}) \quad \text{at} \ x_{1:t}^{(1)} \\
-% \vdots \\
-% g(y_t|x_{t}^{(N)}) \quad \text{at} \ x_{1:t}^{(N)} \\
-% \end{cases}
-% \end{equation}
-
-% Notice that the distributions we are estimating are $p(x_{1:t}|y_{1:t-1})$ and $ p(x_{1:t}|y_{1:t})$, \textit{not} the transition distribution $f$.
-
 
 % --------------------- SIS ---------------------
 \section{Importance Sampling \& Sequential Importance Sampling}
@@ -229,9 +217,9 @@ Importance sampling allows us to sample from a proposal distribution $p(x_{1:n})
 
 \begin{equation}
 \widehat{p}(x_{1:t}|y_{1:t}) = \begin{cases}
-w_{1:t-1}^{(1)}g(y_t|x_{t}^{(1)}) \quad \text{at} \ x_{1:t}^{(1)} \\
+w_{1:t-1}^{(1)}\frac{g(y_k|x_k^{(1)})}{\sum_{j=1}^N g(y_k|x_k^{(j)})} \quad \text{at} \ x_{1:t}^{(1)} \\
 \vdots \\
-w_{1:t-1}^{(N)}g(y_t|x_{t}^{(N)}) \quad \text{at} \ x_{1:t}^{(N)} \\
+w_{1:t-1}^{(N)}\frac{g(y_k|x_k^{(N)})}{\sum_{j=1}^N g(y_k|x_k^{(j)})} \quad \text{at} \ x_{1:t}^{(N)} \\
 \end{cases}
 \end{equation}
 
