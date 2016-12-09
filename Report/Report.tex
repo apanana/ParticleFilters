@@ -135,14 +135,14 @@ p(x_t,y_{1:t}) &= \frac{p(x_t|y_{1:t-1})p(y_t|x_t)}{p(y_t|y_{1:t-1})}p(y_{1:t}) 
 \noindent
 Second, we show $p(x_t,y_{1:t}) = p(x_t,y_{1:t-1})p(y_t|x_t)$. Let's start by refactoring the right-side.
 \begin{align*}
-p(x_t,y_{1:t-1})p(y_t|x_t) 
+p(x_t,y_{1:t-1})p(y_t|x_t)
 &= p(x_t|y_{1:t-1})p(y_{1:t-1})\frac{p(x_t,y_t)}{p(x_t)}\\
 &= p(x_t|y_{1:t-1})p(y_{1:t-1})\frac{p(x_t|y_t)p(y_t)}{p(x_t)}\\
 \intertext{Using the fact that: $p(x|yz) =$ {\Large $\frac{p(y)p(z)}{p(yz)}\frac{p(x|y)p(x|z)}{p(x)}$}
   Let: $x=x_t, y=y_{1:t-1}, z = y_t$}
 \intertext{We can now see that:  $p(x_t|y_{1:t-1},y_t) =$ {\Large $\frac{p(y_{1:t-1})p(y_t)}{p(y_{1:t-1},y_t)}\frac{p(x_t|y_{1:t-1})p(x_t|y_t)}{p(x_t)}$}}
 \intertext{Thus,}
-p(x_t|y_{1:t-1})p(y_{1:t-1})\frac{p(x_t|y_t)p(y_t)}{p(x_t)} 
+p(x_t|y_{1:t-1})p(y_{1:t-1})\frac{p(x_t|y_t)p(y_t)}{p(x_t)}
 &= p(x_t|y_{1:t})p(y_{1:t})\\
 &= p(x_t,y_{1:t})\\
 \end{align*}
@@ -217,11 +217,7 @@ As is, this method does not seem very helpful since we are modelling a distribut
 In this section we will develop the basic but not widely used method of particle filtering. In doing so, we deal with the full posterior $p(x_{1:t}|y_{1:t})$. However, simulating this distribution is the same as simulating our goal distribution, the marginal of the full posterior, $p(x_t|y_{1:t})$. The only difference is that the full posterior will be a $t$-dimensional model while our goal will just be a model of the $t$-th dimension.
 
 \subsection{Importance Sampling}
-<<<<<<< HEAD
-Importance sampling allows us to sample from a proposal distribution $p(x_{1:n})$, one we know e.g. a uniform or gaussian, and then weight samples from this proposal distribution to approximate the target distribution $t(x_{1:n})$ that we want to sample from. At first, this may sound like a trick---if we know the weight (difference) between the target and proposal, how could we not know the target---but if we consider our weight to be something like our function $g$, IS begins to make sense. Assuming we can approximate the prediction step by assigning each sample $x_{1:t}^{(i)}$ a probability $w_{1:t-1}^{(i)}$, which we will show in the next subsection, we can then approximate the update step as follows:
-=======
 \textbf{Importance Sampling} (IS) allows us to sample from a proposal distribution $q(x_{1:n})$, one we know e.g. a uniform or gaussian, and then weight samples from this proposal distribution to match the target distribution $t(x_{1:n})$ that we want to sample from. At first, this may sound like a trick---if we know the weight (difference) between the target and proposal, how could we not know the target---but if we consider our weight to be something like our function $g$, IS begins to make sense. Assuming we can approximate the prediction step by assigning each sample $x_{1:t}^{(i)}$ a probability $w_{1:t-1}^{(i)}$, which we will show in the next subsection, we can then approximate the update step as follows:
->>>>>>> 29de92dcf556e575bc76b60588423105344f9506
 
 \begin{equation}
 \widehat{p}(x_{1:t}|y_{1:t}) = \begin{cases}
