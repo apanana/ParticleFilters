@@ -241,6 +241,7 @@ where $w_{1:t-1}^{(i)}$ are the normalized weights up to time $t$ defined as:
 w_{1:t-1}^{(i)} = \prod_{k=1}^{t-1} \frac{g(y_k|x_k^{(i)})}{\sum_{j=1}^N g(y_k|x_k^{(j)})}
 \end{equation}
 
+\subsubsection{SIS Algorithm}
 Simulating a particle $i$ up to time $t$, we are given a previous path $x_{1:t-1}^{(i)}$, weighted according to $w_{1:t-1}^{(i)}$. We then draw a current state $x_{t}^{(i)}$ from the transition distribution and add it to the current path $x_{1:t} = (x_{1:t-1}^{(i)},x_t^{(i)})$. This completes the prediction step. To update, we multiply the probability of $x_{1:t} = x_{1:t}^{(i)}$, written $p(x_{1:t}|y_{1:t-1}) = w_{1:t-1}^{(i)}$, by $\frac{g(y_t|x_t)}{\sum_{i=1}^N g(y_k|x_k^{(i)})}$.
 
 \begin{enumerate}
